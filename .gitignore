@@ -209,3 +209,12 @@ __marimo__/
 
 # Credentials
 credentials.txt
+
+# Large Data Files (tracked by DVC)
+data/raw/
+data/processed/*.npy
+*.npy
+local_s3/
+
+# Kaggle credentials
+kaggle.json
