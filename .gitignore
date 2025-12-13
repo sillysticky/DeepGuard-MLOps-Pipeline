@@ -225,3 +225,8 @@ models/*.h5
 models/*.pkl
 *.keras
 *.h5
+# DVC outputs - tracked by DVC, not Git
+data/raw
+data/processed
+data/features
+models/
