@@ -22,7 +22,7 @@ preprocessing:
   
   # Number of samples to use (null = use all data)
   # Set to a smaller number for faster testing, e.g., 1000
-  sample_size: 8000
+  sample_size: 10000
   
   # Validation split from training data
   validation_split: 0.2
@@ -44,8 +44,8 @@ augmentation:
 # Model Configuration
 # -------------------
 model:
-  # Architecture: "SimpleCNN", "DeeperCNN", or "EfficientStyleCNN"
-  architecture: "DeeperCNN"
+  # Architecture options: "SimpleCNN", "DeeperCNN", "EfficientStyleCNN", "EfficientNetB0Transfer", "XceptionTransfer" (RECOMMENDED)
+  architecture: "XceptionTransfer"
   
   # Input shape (height, width, channels)
   input_shape: [128, 128, 3]
@@ -53,10 +53,10 @@ model:
 # Training Configuration
 # ----------------------
 training:
-  epochs: 20
+  epochs: 30
   batch_size: 32
-  learning_rate: 0.001
-  early_stopping_patience: 5
+  learning_rate: 0.0001  # Lower LR for fine-tuning pretrained models
+  early_stopping_patience: 7
 
 # MLflow/DagsHub Configuration
 # ----------------------------
