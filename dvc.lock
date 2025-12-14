@@ -34,21 +34,21 @@ stages:
       params.yaml:
         preprocessing.image_size: 128
         preprocessing.random_state: 42
-        preprocessing.sample_size: 8000
+        preprocessing.sample_size: 10000
         preprocessing.validation_split: 0.2
     outs:
     - path: data/processed
       hash: md5
-      md5: 94abf69966ae4054c43a5843eea23d6e.dir
-      size: 3145856768
+      md5: 5c0913be4e9012dab5e51a60d77254c4.dir
+      size: 3932240768
       nfiles: 6
   feature_engineering:
     cmd: python -m src.features.feature_engineering
     deps:
     - path: data/processed
       hash: md5
-      md5: 94abf69966ae4054c43a5843eea23d6e.dir
-      size: 3145856768
+      md5: 5c0913be4e9012dab5e51a60d77254c4.dir
+      size: 3932240768
       nfiles: 6
     - path: src/features/feature_engineering.py
       hash: md5
@@ -67,52 +67,52 @@ stages:
     outs:
     - path: data/features
       hash: md5
-      md5: 2b1348f24d45abee64f8fc1513323805.dir
-      size: 556
+      md5: 6ea9b035096387d99645d6c9be4c6d50.dir
+      size: 559
       nfiles: 3
   model_building:
     cmd: python -m src.model.model_building
     deps:
     - path: data/processed
       hash: md5
-      md5: 94abf69966ae4054c43a5843eea23d6e.dir
-      size: 3145856768
+      md5: 5c0913be4e9012dab5e51a60d77254c4.dir
+      size: 3932240768
       nfiles: 6
     - path: src/model/model_building.py
       hash: md5
-      md5: 7a65dd7057abfe6514225cd6326d9c1b
-      size: 12260
+      md5: dd3b12c26eb6f1af251594731a264cb7
+      size: 16744
     params:
       params.yaml:
-        model.architecture: DeeperCNN
+        model.architecture: XceptionTransfer
         model.input_shape:
         - 128
         - 128
         - 3
         training:
-          epochs: 20
+          epochs: 30
           batch_size: 32
-          learning_rate: 0.001
-          early_stopping_patience: 5
+          learning_rate: 0.0001
+          early_stopping_patience: 7
     outs:
     - path: models
       hash: md5
-      md5: 218bd6dae39d70c25655ee395d45deb0.dir
-      size: 561424161
-      nfiles: 8
+      md5: de0652f32c82728597d1548519c33d87.dir
+      size: 965430925
+      nfiles: 12
   model_evaluation:
     cmd: python -m src.model.model_evaluation
     deps:
     - path: data/processed
       hash: md5
-      md5: 94abf69966ae4054c43a5843eea23d6e.dir
-      size: 3145856768
+      md5: 5c0913be4e9012dab5e51a60d77254c4.dir
+      size: 3932240768
       nfiles: 6
     - path: models
       hash: md5
-      md5: 218bd6dae39d70c25655ee395d45deb0.dir
-      size: 561424161
-      nfiles: 8
+      md5: de0652f32c82728597d1548519c33d87.dir
+      size: 965430925
+      nfiles: 12
     - path: src/model/model_evaluation.py
       hash: md5
       md5: 0da0544b67312804b36352aee08afcfb
@@ -120,29 +120,29 @@ stages:
     outs:
     - path: reports/experiment_info.json
       hash: md5
-      md5: c42ab9192c5c0a33381711192937bcca
-      size: 492
+      md5: 67f24486ae7d72b2beb78496593278ec
+      size: 526
     - path: reports/figures
       hash: md5
-      md5: 49168288682f3a0c8833e9a7499fc6ac.dir
-      size: 673025
-      nfiles: 12
+      md5: ae9ea1c033522fdaf8229a39bfb0b599.dir
+      size: 1011322
+      nfiles: 18
     - path: reports/metrics.json
       hash: md5
-      md5: 604218a7a539a5c998f9358ee9b864b9
-      size: 152
+      md5: 79a11c0c4647dbe915ed22fd48ac0f4b
+      size: 151
   model_registration:
     cmd: python -m src.model.register_model
     deps:
     - path: models
       hash: md5
-      md5: 218bd6dae39d70c25655ee395d45deb0.dir
-      size: 561424161
-      nfiles: 8
+      md5: de0652f32c82728597d1548519c33d87.dir
+      size: 965430925
+      nfiles: 12
     - path: reports/experiment_info.json
       hash: md5
-      md5: c42ab9192c5c0a33381711192937bcca
-      size: 492
+      md5: 67f24486ae7d72b2beb78496593278ec
+      size: 526
     - path: src/model/register_model.py
       hash: md5
       md5: c0b8e4fd31cbcab9bd4ec1078a57ae36
