@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepGuard | AI Deepfake Detector</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i> DeepGuard
+            </div>
+            <p class="subtitle">Next-Gen AI Image Authenticator</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="upload-card">
+            <div class="drop-zone" id="drop-zone">
+                <div class="icon-container">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h3>Drag & Drop Image Here</h3>
+                <p>or</p>
+                <button class="upload-btn" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                <input type="file" id="file-input" hidden accept="image/*">
+            </div>
+            <div id="preview-container" class="hidden">
+                <img id="image-preview" src="" alt="Preview">
+                <button class="remove-btn" onclick="resetUpload()">×</button>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <button id="analyze-btn" class="analyze-btn" disabled>
+            <span>Analyze Image</span>
+            <div class="loader hidden" id="loader"></div>
+        </button>
+
+        <!-- Result Section -->
+        <div id="result-card" class="result-card hidden">
+            <div class="result-header">
+                <span class="label">Detection Result</span>
+                <span class="badge" id="result-badge">FAKE</span>
+            </div>
+            <div class="confidence-wrapper">
+                <div class="confidence-label">
+                    <span>Confidence Score</span>
+                    <span id="confidence-score">98.5%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+            </div>
+            <p class="analysis-text" id="analysis-text">
+                Our AI has detected significant artifacts consistent with GAN-generated imagery.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const loader = document.getElementById('loader');
+        const btnText = analyzeBtn.querySelector('span');
+        const resultCard = document.getElementById('result-card');
+
+        // Drag & Drop Events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('highlight'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        fileInput.addEventListener('change', function () {
+            handleFiles(this.files);
+        });
+
+        let currentFile = null;
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                currentFile = files[0];
+                showPreview(currentFile);
+            }
+        }
+
+        function showPreview(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function () {
+                imagePreview.src = reader.result;
+                dropZone.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+                resultCard.classList.add('hidden');
+            }
+        }
+
+        function resetUpload() {
+            currentFile = null;
+            fileInput.value = '';
+
+            // Reset UI Visibility
+            dropZone.classList.remove('hidden');
+            previewContainer.classList.add('hidden');
+            resultCard.classList.add('hidden');
+
+            // Reset Button State
+            analyzeBtn.disabled = true;
+            btnText.classList.remove('hidden');
+            loader.classList.add('hidden');
+        }
+
+        // Analyze Logic
+        analyzeBtn.addEventListener('click', async () => {
+            if (!currentFile) return;
+
+            // UI Loading State (Start)
+            analyzeBtn.disabled = true;
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+            resultCard.classList.add('hidden');
+
+            const formData = new FormData();
+            formData.append('file', currentFile);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const data = await response.json();
+
+                // Simulate processing delay for smoothness
+                setTimeout(() => {
+                    displayResult(data);
+                }, 600);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Analysis failed. Please try again.");
+            } finally {
+                // Ensure UI resets after processing (after delay)
+                setTimeout(() => {
+                    analyzeBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                }, 600);
+            }
+        });
+
+        function displayResult(data) {
+            const badge = document.getElementById('result-badge');
+            const score = document.getElementById('confidence-score');
+            const bar = document.getElementById('progress-bar');
+            const text = document.getElementById('analysis-text');
+
+            // Update Content
+            badge.textContent = data.label;
+            score.textContent = data.confidence;
+
+            const percentage = parseFloat(data.confidence);
+            bar.style.width = percentage + '%';
+
+            if (data.label === 'FAKE') {
+                badge.className = 'badge badge-fake';
+                bar.style.backgroundColor = '#ff4b4b';
+                text.textContent = "⚠️ Warning: High probability of AI generation detected. Patterns match deepfake artifacts.";
+            } else {
+                badge.className = 'badge badge-real';
+                bar.style.backgroundColor = '#00f260';
+                text.textContent = "✅ Verified: This image appears authentic. No significant AI artifacts found.";
+            }
+
+            // Show Result Card
+            resultCard.classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
