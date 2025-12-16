@@ -44,6 +44,16 @@ The model provides a confidence score and a label for every prediction.
 **Real Image Detection**
 ![Real Detection Example](images/real_face_detection.png)
 
+## Dataset & Capabilities
+
+The model is capable of distinguishing between high-quality GAN/Diffusion generated faces and real photos.
+
+**AI-Generated Sample (Deepfake)**
+![Deepfake Face Sample](images/deep_fake_face.png)
+
+**Real Image Sample**
+![Realistic Image Sample](images/realistic_image.png)
+
 ## Technical Architecture
 
 This project is structured as a modular pipeline controlled by `dvc.yaml`:
