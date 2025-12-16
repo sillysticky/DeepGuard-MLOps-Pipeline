@@ -3,7 +3,7 @@ import os
 import random
 import tensorflow as tf
 from flask import Flask, render_template, request, jsonify, send_file
-from utils import preprocess_image, extract_exif, generate_fft_visualization
+from utils import preprocess_image, generate_fft_visualization
 import numpy as np
 
 # Suppress TF logs
