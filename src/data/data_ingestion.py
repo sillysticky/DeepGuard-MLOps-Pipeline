@@ -153,11 +153,18 @@ class DataIngestion:
         logger.info("Starting Data Ingestion Pipeline")
         logger.info("=" * 50)
         
-        # Step 1: Download dataset
-        source_path = self.download_dataset()
+        # Check if data already exists (e.g., manually downloaded)
+        train_dir = self.raw_data_dir / "train"
+        test_dir = self.raw_data_dir / "test"
         
-        # Step 2: Organize data
-        self.organize_data(source_path)
+        if train_dir.exists() and test_dir.exists():
+            logger.info("Data already exists in raw directory. Skipping download.")
+        else:
+            # Step 1: Download dataset
+            source_path = self.download_dataset()
+            
+            # Step 2: Organize data
+            self.organize_data(source_path)
         
         # Step 3: Validate data
         validation = self.validate_data()
