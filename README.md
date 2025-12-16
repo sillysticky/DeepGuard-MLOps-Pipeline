@@ -82,8 +82,8 @@ This project is structured as a modular pipeline controlled by `dvc.yaml`:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/HarshTomar1234/MLOps-Text-Classification-Pipeline.git
-cd MLOps-Text-Classification-Pipeline
+git clone https://github.com/HarshTomar1234/DeepGuard-MLOps-Pipeline.git
+cd DeepGuard-MLOps-Pipeline
 ```
 
 ### 2. Install Dependencies
@@ -110,4 +110,4 @@ Check out the live demonstration on Hugging Face Spaces:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache License - see the LICENSE file for details.
