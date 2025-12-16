@@ -8,7 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=3">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -26,7 +26,7 @@
             <div class="logo">
                 <i class="fa-solid fa-shield-halved"></i> DeepGuard
             </div>
-            <p class="subtitle">Next-Gen AI Image Authenticator</p>
+            <p class="subtitle">Decode the Digital Deception</p>
         </header>
 
         <!-- Upload Section -->
@@ -46,6 +46,21 @@
             </div>
         </div>
 
+        <!-- Sample Images Section -->
+        <div class="sample-section">
+            <p class="sample-title"><i class="fa-solid fa-images"></i> Try Sample Images</p>
+            <div class="sample-grid">
+                <div class="sample-item" onclick="loadSample('real')">
+                    <span class="sample-badge sample-real">REAL</span>
+                    <span>Flickr Photo</span>
+                </div>
+                <div class="sample-item" onclick="loadSample('fake')">
+                    <span class="sample-badge sample-fake">FAKE</span>
+                    <span>GAN Generated</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Action Button -->
         <button id="analyze-btn" class="analyze-btn" disabled>
             <span>Analyze Image</span>
@@ -58,11 +73,14 @@
                 <span class="label">Detection Result</span>
                 <span class="badge" id="result-badge">FAKE</span>
             </div>
+
+            <!-- Big Confidence Display -->
+            <div class="big-confidence">
+                <span class="big-number" id="big-number">98.5%</span>
+                <span class="big-label">confidence</span>
+            </div>
+
             <div class="confidence-wrapper">
-                <div class="confidence-label">
-                    <span>Confidence Score</span>
-                    <span id="confidence-score">98.5%</span>
-                </div>
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" id="progress-bar"></div>
                 </div>
@@ -70,7 +88,104 @@
             <p class="analysis-text" id="analysis-text">
                 Our AI has detected significant artifacts consistent with GAN-generated imagery.
             </p>
+
+            <!-- Additional Analysis Section -->
+            <div class="additional-analysis">
+                <h4><i class="fa-solid fa-microscope"></i> Frequency Analysis</h4>
+
+                <!-- FFT Visualization -->
+                <div class="analysis-item">
+                    <p class="analysis-detail">FFT spectrum visualization (GAN artifacts may appear as grid patterns)
+                    </p>
+                    <div class="fft-container">
+                        <img id="fft-image" src="" alt="FFT Spectrum" class="fft-image hidden">
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- How It Works Section -->
+        <div class="info-section">
+            <button class="info-toggle" onclick="toggleInfo('how-it-works')">
+                <i class="fa-solid fa-brain"></i> How It Works
+                <i class="fa-solid fa-chevron-down toggle-icon" id="how-icon"></i>
+            </button>
+            <div class="info-content hidden" id="how-it-works">
+                <div class="info-item">
+                    <i class="fa-solid fa-microchip"></i>
+                    <div>
+                        <strong>XceptionTransfer Model</strong>
+                        <p>Deep neural network trained on 140,000 real and GAN-generated faces</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-eye"></i>
+                    <div>
+                        <strong>Artifact Detection</strong>
+                        <p>Identifies subtle patterns in GAN-generated images invisible to humans</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <div>
+                        <strong>88% Accuracy</strong>
+                        <p>Validated on 20,000 test images with 95% ROC-AUC score</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Limitations Disclaimer -->
+        <div class="info-section">
+            <button class="info-toggle warning" onclick="toggleInfo('limitations')">
+                <i class="fa-solid fa-triangle-exclamation"></i> Model Limitations
+                <i class="fa-solid fa-chevron-down toggle-icon" id="limit-icon"></i>
+            </button>
+            <div class="info-content hidden" id="limitations">
+                <div class="limitation-box">
+                    <p><strong>⚠️ This model is trained on StyleGAN-generated faces only.</strong></p>
+                    <p>It may not accurately detect images from:</p>
+                    <ul>
+                        <li>Stable Diffusion / Midjourney / DALL-E</li>
+                        <li>Non-face images or full body photos</li>
+                        <li>Heavily edited or filtered images</li>
+                    </ul>
+                    <p class="limitation-note">For best results, use face-focused images.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Mode Section -->
+        <div class="info-section">
+            <button class="info-toggle" onclick="toggleInfo('comparison')">
+                <i class="fa-solid fa-images"></i> What Does a Fake Look Like?
+                <i class="fa-solid fa-chevron-down toggle-icon" id="compare-icon"></i>
+            </button>
+            <div class="info-content hidden" id="comparison">
+                <p class="compare-intro">Compare real photos with GAN-generated fakes:</p>
+                <div class="compare-grid">
+                    <div class="compare-col">
+                        <span class="compare-label real">REAL</span>
+                        <img id="compare-real" src="" alt="Real Example" class="compare-img">
+                        <p class="compare-desc">Flickr photo with natural imperfections</p>
+                    </div>
+                    <div class="compare-col">
+                        <span class="compare-label fake">FAKE</span>
+                        <img id="compare-fake" src="" alt="Fake Example" class="compare-img">
+                        <p class="compare-desc">StyleGAN generated - look for asymmetry, artifacts</p>
+                    </div>
+                </div>
+                <button class="shuffle-btn" onclick="loadComparisonImages()">
+                    <i class="fa-solid fa-shuffle"></i> Load New Examples
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with <i class="fa-solid fa-heart" style="color: #ff4b4b;"></i> using TensorFlow & MLflow</p>
+            <p class="footer-sub">DeepGuard MLOps Pipeline v1.0</p>
+        </footer>
 
     </div>
 
@@ -150,6 +265,47 @@
             loader.classList.add('hidden');
         }
 
+        // Load Sample Image
+        async function loadSample(type) {
+            try {
+                const response = await fetch(`/sample/${type}`);
+                const blob = await response.blob();
+                currentFile = new File([blob], `sample_${type}.jpg`, { type: 'image/jpeg' });
+                showPreview(currentFile);
+            } catch (error) {
+                console.error('Error loading sample:', error);
+                alert('Failed to load sample image');
+            }
+        }
+
+        // Load Comparison Images
+        async function loadComparisonImages() {
+            const realImg = document.getElementById('compare-real');
+            const fakeImg = document.getElementById('compare-fake');
+
+            // Add timestamp to prevent caching and get new random images
+            const timestamp = Date.now();
+            realImg.src = `/sample/real?t=${timestamp}`;
+            fakeImg.src = `/sample/fake?t=${timestamp}`;
+        }
+
+        // Toggle Info Sections
+        function toggleInfo(id) {
+            const content = document.getElementById(id);
+            let icon;
+            if (id === 'how-it-works') icon = document.getElementById('how-icon');
+            else if (id === 'limitations') icon = document.getElementById('limit-icon');
+            else if (id === 'comparison') icon = document.getElementById('compare-icon');
+
+            content.classList.toggle('hidden');
+            if (icon) icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+
+            // Auto-load comparison images when section opens
+            if (id === 'comparison' && !content.classList.contains('hidden')) {
+                loadComparisonImages();
+            }
+        }
+
         // Analyze Logic
         analyzeBtn.addEventListener('click', async () => {
             if (!currentFile) return;
@@ -193,13 +349,13 @@
 
         function displayResult(data) {
             const badge = document.getElementById('result-badge');
-            const score = document.getElementById('confidence-score');
+            const bigNumber = document.getElementById('big-number');
             const bar = document.getElementById('progress-bar');
             const text = document.getElementById('analysis-text');
 
             // Update Content
             badge.textContent = data.label;
-            score.textContent = data.confidence;
+            bigNumber.textContent = data.confidence;
 
             const percentage = parseFloat(data.confidence);
             bar.style.width = percentage + '%';
@@ -207,11 +363,22 @@
             if (data.label === 'FAKE') {
                 badge.className = 'badge badge-fake';
                 bar.style.backgroundColor = '#ff4b4b';
-                text.textContent = "⚠️ Warning: High probability of AI generation detected. Patterns match deepfake artifacts.";
+                bigNumber.style.color = '#ff4b4b';
+                text.textContent = "⚠️ Warning: High probability of AI generation detected. Patterns match GAN-generated artifacts.";
             } else {
                 badge.className = 'badge badge-real';
                 bar.style.backgroundColor = '#00f260';
+                bigNumber.style.color = '#00f260';
                 text.textContent = "✅ Verified: This image appears authentic. No significant AI artifacts found.";
+            }
+
+            // Display FFT Image
+            const fftImage = document.getElementById('fft-image');
+            if (data.fft && data.fft.success && data.fft.image) {
+                fftImage.src = data.fft.image;
+                fftImage.classList.remove('hidden');
+            } else {
+                fftImage.classList.add('hidden');
             }
 
             // Show Result Card
