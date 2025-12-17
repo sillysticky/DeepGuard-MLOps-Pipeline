@@ -1,0 +1,8 @@
+# Flask App Dependencies
+# ======================
+# Using tensorflow-cpu for smaller image size (no GPU needed in container)
+
+flask>=2.3.0
+tensorflow-cpu>=2.15.0
+numpy>=1.23.0
+pillow>=9.0.0
