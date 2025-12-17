@@ -1,15 +1,15 @@
 # DeepGuard Pipeline Quickstart Guide
 
-> **Purpose**: Get the DeepGuard MLOps pipeline running from scratch in under 30 minutes.
+This guide provides step-by-step instructions to get the DeepGuard MLOps pipeline running from scratch in under 30 minutes.
 
 ---
 
-## ⚡ Quick Setup (5 minutes)
+## Quick Setup (5 minutes)
 
 ### 1. Clone Repository
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/DeepGuard-MLOps-Pipeline.git
+git clone https://github.com/HarshTomar1234/DeepGuard-MLOps-Pipeline.git
 cd DeepGuard-MLOps-Pipeline
 ```
 
@@ -17,13 +17,13 @@ cd DeepGuard-MLOps-Pipeline
 
 ```powershell
 # Create virtual environment
-python -m venv venv
+python -m venv atlas
 
 # Activate (Windows)
-.\venv\Scripts\Activate
+.\atlas\Scripts\Activate
 
 # Activate (Linux/Mac)
-source venv/bin/activate
+source atlas/bin/activate
 ```
 
 ### 3. Install Dependencies
@@ -45,7 +45,7 @@ KAGGLE_KEY=your_kaggle_api_key
 
 ---
 
-## 🚀 Run Full Pipeline (20 minutes)
+## Run Full Pipeline (20 minutes)
 
 ### Option A: Run All Stages at Once
 
@@ -79,78 +79,89 @@ dvc repro model_registration
 
 ---
 
-## 🔧 View Pipeline DAG
+## View Pipeline DAG
 
 ```powershell
-# View pipeline dependency graph
 dvc dag
 ```
 
 Expected output:
 ```
-+----------------+  
-| data_ingestion |  
-+----------------+  
-        *          
-        *          
-        *          
-+-------------------+  
-| data_preprocessing |  
-+-------------------+  
-        *          
-        *          
-        *          
-+---------------------+  
-| feature_engineering |  
-+---------------------+  
-        *          
-        *          
-        *          
-+----------------+  
-| model_building |  
-+----------------+  
-        *          
-        *          
-        *          
-+------------------+  
-| model_evaluation |  
-+------------------+  
-        *          
-        *          
-        *          
-+--------------------+  
-| model_registration |  
-+--------------------+  
++----------------+
+| data_ingestion |
++----------------+
+        *
+        *
+        *
++-------------------+
+| data_preprocessing |
++-------------------+
+        *
+        *
+        *
++---------------------+
+| feature_engineering |
++---------------------+
+        *
+        *
+        *
++----------------+
+| model_building |
++----------------+
+        *
+        *
+        *
++------------------+
+| model_evaluation |
++------------------+
+        *
+        *
+        *
++--------------------+
+| model_registration |
++--------------------+
 ```
 
 ---
 
-## 🖥️ Run Flask Web Application
+## Run Flask Web Application
 
 After training, launch the web app:
 
 ```powershell
-# Start Flask server
 python flask_app/app.py
 ```
 
-Open browser at: [http://localhost:5000](http://localhost:5000)
+Open browser at: http://localhost:5000
 
 ### Test the App
 
 1. Upload an image (JPEG, PNG)
 2. Click "Analyze Image"
-3. View prediction: **Real** or **AI-Generated**
+3. View prediction: Real or AI-Generated
 
 ---
 
-## 📊 View Results
+## Run with Docker
+
+```powershell
+# Build the image
+docker build -t deepguard-app:latest .
+
+# Run the container
+docker run -p 8888:5000 deepguard-app:latest
+```
+
+Open browser at: http://localhost:8888
+
+---
+
+## View Results
 
 ### Check Metrics
 
 ```powershell
-# View evaluation metrics
-cat reports/metrics.json
+type reports\metrics.json
 ```
 
 Example output:
@@ -167,19 +178,19 @@ Example output:
 ### View Experiment on DagsHub
 
 1. Go to your DagsHub repository
-2. Click **"Experiments"** tab
+2. Click "Experiments" tab
 3. Compare runs and view artifacts
 
 ### View Generated Figures
 
 Check `reports/figures/` for:
-- `confusion_matrix.png` - Model predictions vs actual
-- `roc_curve.png` - ROC curve with AUC score
-- `training_history.png` - Loss and accuracy over epochs
+- confusion_matrix.png - Model predictions vs actual
+- roc_curve.png - ROC curve with AUC score
+- training_history.png - Loss and accuracy over epochs
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Modify Hyperparameters
 
@@ -214,7 +225,7 @@ DVC automatically detects parameter changes and re-runs affected stages.
 
 ---
 
-## 🧪 Run Individual Modules
+## Run Individual Modules
 
 ### Test Data Ingestion
 
@@ -242,14 +253,13 @@ python -m src.model.model_evaluation
 
 ---
 
-## 📈 Compare Experiments
+## Compare Experiments
 
 ### List All Experiments
 
 ```python
 import mlflow
 
-# List experiments
 experiments = mlflow.search_experiments()
 for exp in experiments:
     print(f"{exp.name}: {exp.experiment_id}")
@@ -258,14 +268,13 @@ for exp in experiments:
 ### Compare Runs
 
 ```python
-# Search runs
 runs = mlflow.search_runs(experiment_names=["DeepGuard-Model-Training"])
 print(runs[["run_id", "metrics.accuracy", "params.architecture"]])
 ```
 
 ---
 
-## 🔄 Update Data and Retrain
+## Update Data and Retrain
 
 ### Pull Latest Data
 
@@ -276,7 +285,6 @@ dvc pull
 ### Force Re-run a Stage
 
 ```powershell
-# Force re-run model building
 dvc repro -f model_building
 ```
 
@@ -288,14 +296,13 @@ dvc repro -f
 
 ---
 
-## 📦 Export Model for Deployment
+## Export Model for Deployment
 
 ### Save Model Locally
 
 ```powershell
 # Model is saved at models/best_model.keras
-# Copy for deployment
-cp models/best_model.keras deployment/
+copy models\best_model.keras deployment\
 ```
 
 ### Load Model for Inference
@@ -311,34 +318,33 @@ model = load_model("models/best_model.keras")
 ```python
 import mlflow.keras
 
-# Load production model
 model = mlflow.keras.load_model("models:/DeepGuard-Classifier/Production")
 ```
 
 ---
 
-## ❗ Common Issues
+## Common Issues
 
 | Issue | Solution |
 |-------|----------|
-| `kagglehub` error | Check KAGGLE_USERNAME and KAGGLE_KEY in `.env` |
-| `OOM during training` | Reduce `batch_size` or `sample_size` in `params.yaml` |
-| `MLflow connection failed` | Verify DagsHub credentials and tracking URI |
-| `dvc repro` does nothing | Parameters/dependencies unchanged; use `dvc repro -f` |
-| `ModuleNotFoundError` | Run `pip install -e .` to install local package |
+| kagglehub error | Check KAGGLE_USERNAME and KAGGLE_KEY in `.env` |
+| OOM during training | Reduce batch_size or sample_size in params.yaml |
+| MLflow connection failed | Verify DagsHub credentials and tracking URI |
+| dvc repro does nothing | Parameters/dependencies unchanged; use `dvc repro -f` |
+| ModuleNotFoundError | Run `pip install -e .` to install local package |
 
 ---
 
-## 📚 Next Steps
+## Next Steps
 
-1. **Explore Notebooks**: Check `notebooks/` for detailed analysis
-2. **Customize Architecture**: Add new models in `src/model/model_building.py`
-3. **Deploy to Cloud**: See deployment guides for AWS/GCP/Azure
-4. **Set Up CI/CD**: Add GitHub Actions for automated testing
+1. Explore Notebooks: Check `notebooks/` for detailed analysis
+2. Customize Architecture: Add new models in `src/model/model_building.py`
+3. Deploy to Cloud: Use the Docker image with AWS EKS or similar
+4. Set Up CI/CD: GitHub Actions workflow included in `.github/workflows/`
 
 ---
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - [Architecture Guide](ARCHITECTURE.md) - System design overview
 - [Setup Guide](SETUP.md) - DagsHub/MLflow configuration
