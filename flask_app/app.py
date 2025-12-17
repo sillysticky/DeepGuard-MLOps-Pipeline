@@ -77,8 +77,8 @@ def predict():
 
 @app.route('/sample/<image_type>')
 def sample_image(image_type):
-    """Serve sample images from test dataset"""
-    base_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw', 'test')
+    """Serve sample images from samples directory (works in Docker)"""
+    base_path = os.path.join(os.path.dirname(__file__), 'samples')
     
     if image_type == 'real':
         folder = os.path.join(base_path, 'REAL')
