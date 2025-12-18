@@ -238,3 +238,6 @@ models/
 reports/figures/
 reports/experiment_info.json
 /models
+
+# Hugging Face Space (separate repo)
+huggingface_space/
