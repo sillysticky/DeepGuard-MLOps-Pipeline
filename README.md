@@ -337,6 +337,39 @@ Trigger: Push to main branch
 └─────────────────────────────────────────────────────────┘
 ```
 
+### EKS Deployment
+
+The application was successfully deployed to AWS EKS with LoadBalancer service:
+
+| Component | Details |
+|-----------|---------|
+| Cluster | `deepguard-cluster` |
+| Node Type | t3.small (1 node) |
+| Memory Limit | 1.5Gi (TensorFlow requirement) |
+| Service Type | LoadBalancer |
+
+For detailed deployment guide, see [docs/EKS_DEPLOYMENT.md](docs/EKS_DEPLOYMENT.md).
+
+### Monitoring with Prometheus and Grafana
+
+The project includes observability setup with Prometheus for metrics collection and Grafana for visualization.
+
+**Prometheus Metrics:**
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `up` | Gauge | Service availability |
+| `prometheus_http_requests_total` | Counter | Total HTTP requests |
+| `process_resident_memory_bytes` | Gauge | Memory usage |
+
+**Grafana Dashboard Examples:**
+
+| Service Status | HTTP Requests | Memory Usage |
+|----------------|---------------|--------------|
+| ![Status](images/monitoring/grafana%20service%20status.png) | ![Requests](images/monitoring/grafana%20http%20requests%20visuals.png) | ![Memory](images/monitoring/memory%20usage(time%20series).png) |
+
+For detailed monitoring setup, see [docs/MONITORING.md](docs/MONITORING.md).
+
 ---
 
 ## Live Demo
@@ -368,6 +401,18 @@ See [docs/MODEL_LIMITATIONS.md](docs/MODEL_LIMITATIONS.md) for detailed analysis
 All experiments are tracked on DagsHub:
 
 [View MLflow Experiments](https://dagshub.com/pythonharsh1234/DeepGuard-MLOps-Pipeline/experiments)
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture and design |
+| [QUICKSTART.md](docs/QUICKSTART.md) | Quick start guide |
+| [SETUP.md](docs/SETUP.md) | DagsHub/MLflow setup |
+| [EKS_DEPLOYMENT.md](docs/EKS_DEPLOYMENT.md) | Kubernetes deployment guide |
+| [MONITORING.md](docs/MONITORING.md) | Prometheus & Grafana setup |
 
 ---
 
