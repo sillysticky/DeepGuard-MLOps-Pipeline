@@ -62,6 +62,90 @@ Cluster
                           └── Container (your app)
 ```
 
+### EKS Architecture Deep Dive
+
+#### What is Amazon EKS?
+
+**EKS = Elastic Kubernetes Service** - AWS-managed Kubernetes that handles the control plane complexity.
+
+```
++------------------------------------------------------------------+
+|                         YOUR AWS ACCOUNT                          |
+|  +---------------------------+   +----------------------------+   |
+|  |     EKS CONTROL PLANE     |   |       WORKER NODES         |   |
+|  |      (AWS Managed)        |   |     (You manage EC2s)      |   |
+|  |  - API Server             |   |  +--------+  +--------+    |   |
+|  |  - etcd (data store)      |   |  |  Pod   |  |  Pod   |    |   |
+|  |  - Scheduler              |   |  | (app)  |  | (app)  |    |   |
+|  |  - Controller Manager     |   |  +--------+  +--------+    |   |
+|  +---------------------------+   +----------------------------+   |
++------------------------------------------------------------------+
+```
+
+#### EKS Control Plane Components
+
+| Component | Purpose |
+|-----------|---------|
+| **API Server** | Entry point for all kubectl commands |
+| **etcd** | Key-value store for cluster state |
+| **Scheduler** | Decides which node runs each pod |
+| **Controller Manager** | Maintains desired state (replicas, etc.) |
+
+**Cost:** $0.10/hour (~$72/month) per cluster
+
+#### Node Groups
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| **Managed Node Group** | AWS handles updates/scaling | Production (recommended) |
+| **Self-Managed Nodes** | You manage EC2 instances | Custom AMIs needed |
+| **Fargate** | Serverless (no EC2) | Variable workloads |
+
+#### AWS CloudFormation
+
+**CloudFormation** = Infrastructure-as-Code service that eksctl uses internally.
+
+When you run `eksctl create cluster`, it creates CloudFormation stacks:
+
+| Stack Name | Resources Created |
+|------------|-------------------|
+| `eksctl-CLUSTER-cluster` | VPC, Subnets, EKS Control Plane, IAM Roles |
+| `eksctl-CLUSTER-nodegroup-NODES` | EC2 instances, Auto Scaling Group |
+
+**View stacks:**
+```powershell
+aws cloudformation list-stacks --query "StackSummaries[?contains(StackName,'eksctl')]"
+```
+
+#### Auto Scaling Groups (ASG)
+
+Node Groups use ASG to manage EC2 instances:
+
+| Parameter | Description |
+|-----------|-------------|
+| `--nodes` | Desired number of nodes |
+| `--nodes-min` | Minimum nodes (scale down limit) |
+| `--nodes-max` | Maximum nodes (scale up limit) |
+
+#### Fleet Requests
+
+AWS internal process for provisioning EC2 instances.
+
+**Common Error:** "You've reached your quota for maximum Fleet Requests"
+**Solution:** Request quota increase or delete unused ASGs/clusters.
+
+#### Complete Resource Flow
+
+```
+eksctl create cluster
+         ↓
+CloudFormation Stack 1 (Cluster) → VPC, Subnets, EKS Control Plane
+         ↓
+CloudFormation Stack 2 (NodeGroup) → Auto Scaling Group → EC2 Nodes
+         ↓
+Kubernetes Objects → Deployment → Pods → Your App
+```
+
 ---
 
 ## Tool Installation
